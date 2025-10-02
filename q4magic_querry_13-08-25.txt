@@ -122,3 +122,130 @@ ALTER TABLE `accounts` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cu
 ALTER TABLE `opportunities` ADD `created_by` INT NULL AFTER `is_deleted`;
 
 ALTER TABLE `opportunities` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 12-09-25 ============================
+
+ALTER TABLE `sync_records_queue` ADD `created_by` INT NULL AFTER `date`;
+
+ALTER TABLE `sync_records_queue` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `contacts` ADD `created_by` INT NULL AFTER `is_deleted`;
+
+ALTER TABLE `contacts` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+
+============================ 13-09-25 ============================
+
+ALTER TABLE `customers` ADD `parent_id` INT NULL AFTER `billing_address_same_as_primary`;
+
+ALTER TABLE `customers` ADD FOREIGN KEY (`parent_id`) REFERENCES `customers`(`cus_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+
+CREATE TABLE `q4magic`.`sub_users_type` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NOT NULL , `created_by` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `sub_users_type` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+CREATE TABLE `q4magic`.`functionality` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `q4magic`.`modules` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NOT NULL , `functionality_id` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `modules` ADD FOREIGN KEY (`functionality_id`) REFERENCES `functionality`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+CREATE TABLE `q4magic`.`actions` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `q4magic`.`module_actions` (`id` INT NOT NULL AUTO_INCREMENT , `module_id` INT NULL , `action_id` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `module_actions` ADD FOREIGN KEY (`module_id`) REFERENCES `modules`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; ALTER TABLE `module_actions` ADD FOREIGN KEY (`action_id`) REFERENCES `actions`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `module_actions` DROP FOREIGN KEY `module_actions_ibfk_2`; ALTER TABLE `module_actions` ADD CONSTRAINT `module_actions_ibfk_2` FOREIGN KEY (`action_id`) REFERENCES `actions`(`id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+============================ 15-09-25 ============================
+
+ALTER TABLE `customers` ADD `paymentProfileId` VARCHAR(250) NULL AFTER `parent_id`, ADD `customerProfileId` VARCHAR(250) NULL AFTER `paymentProfileId`;
+
+
+ALTER TABLE `customers` CHANGE `customerProfileId` `customer_profile_id` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `customers` CHANGE `paymentProfileId` `payment_profile_id` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+============================ 16-09-25 ============================
+
+CREATE TABLE `q4magic`.`role_module_actions` (`id` INT NOT NULL AUTO_INCREMENT , `role_id` INT NULL , `module_action_Id` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `role_module_actions` ADD FOREIGN KEY (`role_id`) REFERENCES `sub_users_type`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; 
+
+ALTER TABLE `role_module_actions` ADD FOREIGN KEY (`module_action_Id`) REFERENCES `module_actions`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `customers` ADD `sub_user_type` INT NULL AFTER `customer_profile_id`;
+
+ALTER TABLE `customers` ADD FOREIGN KEY (`sub_user_type`) REFERENCES `sub_users_type`(`id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+============================ 18-09-25 ============================
+
+ALTER TABLE `sync_records_queue` ADD `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE AFTER `created_by`;
+
+ALTER TABLE `sync_records_queue` CHANGE `subject_id` `subject_id` INT(11) NULL;
+
+ALTER TABLE `customers` CHANGE `address1` `address1` VARCHAR(400) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `customers` CHANGE `address1` `address1` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `customers` CHANGE `billing_address1` `billing_address1` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+============================ 24-09-25 ============================
+
+ALTER TABLE q4magic.opportunities DROP FOREIGN KEY fk_opportunties_accounts1;
+
+ALTER TABLE `opportunities` CHANGE `acc_id` `acc_id` VARCHAR(250) NULL DEFAULT NULL;
+
+ALTER TABLE `opportunities` CHANGE `acc_id` `acc_id` INT NULL DEFAULT NULL;
+
+ALTER TABLE `opportunities` ADD FOREIGN KEY (`acc_id`) REFERENCES `accounts`(`acc_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `opportunities` ADD `partners` VARCHAR(250) NULL AFTER `created_by`;
+
+CREATE TABLE `q4magic`.`opportunities_partner_details` (`id` INT NOT NULL AUTO_INCREMENT , `opportunity_Id` INT NOT NULL , `account_to_Id` INT NOT NULL , `account_Id` INT NOT NULL , `role` VARCHAR(200) NOT NULL , `is_primary` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `opportunities_partner_details` ADD FOREIGN KEY (`opportunity_Id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `opportunities_partner_details` CHANGE `account_to_Id` `account_to_Id` VARCHAR(300) NOT NULL;
+
+ALTER TABLE `opportunities_partner_details` CHANGE `account_Id` `account_Id` VARCHAR(300) NOT NULL;
+
+ALTER TABLE `opportunities_partner_details` ADD `opportunity_partner_id` VARCHAR(200) NULL AFTER `id`;
+
+ALTER TABLE `opportunities_partner_details` ADD `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE AFTER `is_primary`;
+
+============================ 25-09-25 ============================
+
+ALTER TABLE `customers` CHANGE `email_address` `email_address` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+============================ 27-09-25 ============================
+
+CREATE TABLE `q4magic`.`team_details` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(250) NOT NULL , `created_by` INT NULL , `created_date` DATE NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `team_details` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+CREATE TABLE `q4magic`.`team_members` (`id` INT NOT NULL AUTO_INCREMENT , `team_id` INT NULL , `member_id` INT NULL , `opp_id` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `team_members` ADD FOREIGN KEY (`team_id`) REFERENCES `team_details`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; 
+ALTER TABLE `team_members` ADD FOREIGN KEY (`member_id`) REFERENCES `customers`(`cus_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+============================ 30-09-25 ============================
+
+ALTER TABLE `team_members` CHANGE `opp_id` `opp_id` VARCHAR(200) NULL DEFAULT NULL;
+
+ALTER TABLE `team_members` CHANGE `opp_id` `opp_id` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `team_details` ADD `assign_member` INT NULL AFTER `created_date`;
+
+ALTER TABLE `team_details` ADD FOREIGN KEY (`assign_member`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 01-10-25 ============================
+
+ALTER TABLE `team_details` ADD `assign_opp_id` INT NULL AFTER `assign_member`;
+
+ALTER TABLE `team_details` CHANGE `assign_opp_id` `assign_opp_id` VARCHAR(300) NULL DEFAULT NULL;
