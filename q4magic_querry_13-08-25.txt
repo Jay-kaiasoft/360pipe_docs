@@ -249,3 +249,212 @@ ALTER TABLE `team_details` ADD FOREIGN KEY (`assign_member`) REFERENCES `custome
 ALTER TABLE `team_details` ADD `assign_opp_id` INT NULL AFTER `assign_member`;
 
 ALTER TABLE `team_details` CHANGE `assign_opp_id` `assign_opp_id` VARCHAR(300) NULL DEFAULT NULL;
+
+============================ 02-10-25 ============================
+
+ALTER TABLE `customer_quotas` CHANGE `cus_id` `cus_id` INT(11) NULL;
+
+ALTER TABLE `customer_quotas` CHANGE `cus_quo_id` `cus_quo_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `customer_quotas` DROP FOREIGN KEY `fk_customer_quotas_customers2`; ALTER TABLE `customer_quotas` ADD CONSTRAINT `fk_customer_quotas_customers2` FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+============================ 04-10-25 ============================
+
+ALTER TABLE `sync_records_queue` ADD `error` VARCHAR(250) NULL AFTER `sync_type`;
+
+ALTER TABLE `role_lookup` CHANGE `role_id` `role_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `todo` CHANGE `cus_id_owner` `cus_id_owner` INT(11) NULL;
+
+ALTER TABLE `todo` CHANGE `source` `source` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+ALTER TABLE `todo` CHANGE `task` `task` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+ALTER TABLE `todo` CHANGE `due_date` `due_date` DATE NULL;
+
+ALTER TABLE `todo` CHANGE `status` `status` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+ALTER TABLE `todo` CHANGE `todo_id` `todo_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `todo` CHANGE `attachment` `attachment` VARCHAR(250) NULL DEFAULT NULL;
+
+ALTER TABLE `todo` ADD `salesforce_todo_id` VARCHAR(100) NULL AFTER `todo_id`;
+
+============================ 06-10-25 ============================
+
+ALTER TABLE `todo` ADD `completed_date` DATE NULL AFTER `status`;
+
+ALTER TABLE `it_landscape` ADD `salesforce_opportunity_id` VARCHAR(200) NULL AFTER `opp_id`;
+
+ALTER TABLE `it_landscape` ADD `salesforce_competitor_id` VARCHAR(200) NULL AFTER `it_id`;
+
+ALTER TABLE `todo` ADD `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE AFTER `completed_date`;
+
+ALTER TABLE `it_landscape` ADD `it_landscape` BOOLEAN NOT NULL DEFAULT FALSE AFTER `partner_flag`;
+
+ALTER TABLE `it_landscape` CHANGE `it_landscape` `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
+
+ALTER TABLE `sales_stages` CHANGE `sales_stage_id` `sales_stage_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `sales_stages` ADD `salesforce_stage_id` VARCHAR(150) NULL AFTER `sales_stage_id`;
+
+ALTER TABLE `todo` ADD `created_by` INT NULL AFTER `is_deleted`;
+
+ALTER TABLE `todo` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 07-10-25 ============================
+
+
+ALTER TABLE `todo_assignees` ADD `team_id` INT NULL AFTER `cus_id_assignee`;
+
+ALTER TABLE `todo_assignees` DROP FOREIGN KEY `fk_todo_assignees_todo1`; 
+
+ALTER TABLE `todo_assignees` ADD CONSTRAINT `fk_todo_assignees_todo1` FOREIGN KEY (`todo_id`) REFERENCES `todo`(`todo_id`) ON DELETE CASCADE ON UPDATE NO ACTION; 
+
+ALTER TABLE `todo_assignees` ADD FOREIGN KEY (`team_id`) REFERENCES `team_details`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `todo_assignees` CHANGE `todo_ass_id` `todo_ass_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `todo_assignees` ADD `assign_by` INT NULL AFTER `team_id`;
+
+ALTER TABLE `todo_assignees` ADD FOREIGN KEY (`assign_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `todo` ADD `created_by` INT NULL AFTER `is_deleted`;
+
+ALTER TABLE `todo` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `todo_assignees` CHANGE `cus_id_assignee` `cus_id_assignee` INT(11) NULL;
+
+============================ 08-10-25 ============================
+
+ALTER TABLE `todo` ADD `is_today` BOOLEAN NOT NULL DEFAULT FALSE AFTER `created_by`;
+
+============================ 09-10-25 ============================
+
+ALTER TABLE q4magic.todo_assignees DROP FOREIGN KEY fk_todo_assignees_customers1;
+
+ALTER TABLE `todo_assignees` CHANGE `cus_id_assignee` `cus_id_assignee` VARCHAR(200) NULL;
+
+ALTER TABLE `todo` ADD `complected_work` INT NULL AFTER `is_today`;
+
+ALTER TABLE `it_landscape` DROP FOREIGN KEY `fk_it_land_scape_customers1`;
+
+ALTER TABLE `it_landscape` ADD CONSTRAINT `fk_it_land_scape_customers1` FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `it_landscape` DROP FOREIGN KEY `fk_it_landscape_opportunties1`;
+
+ALTER TABLE `it_landscape` ADD CONSTRAINT `fk_it_landscape_opportunties1` FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+============================ 10-10-25 ============================
+
+ALTER TABLE `todo_assignees` CHANGE `cus_id_assignee` `cus_id_assignee` INT NULL DEFAULT NULL;
+
+ALTER TABLE `todo_assignees` ADD FOREIGN KEY (`cus_id_assignee`) REFERENCES `customers`(`cus_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+ALTER TABLE `todo_assignees` ADD `is_today` BOOLEAN NULL AFTER `assign_by`, ADD `complected_work` INT NULL AFTER `is_today`;
+
+============================ 11-10-25 ============================
+
+ALTER TABLE `todo_assignees` ADD `status` VARCHAR(100) NULL AFTER `complected_work`, ADD `due_date` DATE NULL AFTER `status`, ADD `priority` INT NULL AFTER `due_date`;
+
+ALTER TABLE `todo` DROP `topic`;
+
+============================ 13-10-25 ============================
+
+CREATE TABLE `q4magic`.`todo_priority` (`id` INT NOT NULL AUTO_INCREMENT , `todo_id` INT NULL , `user_id` INT NULL , `priority_index` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `todo_priority` ADD FOREIGN KEY (`todo_id`) REFERENCES `todo`(`todo_id`) ON DELETE CASCADE ON UPDATE RESTRICT; 
+
+ALTER TABLE `todo_priority` ADD FOREIGN KEY (`user_id`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 14-10-25 ============================
+
+CREATE TABLE `q4magic`.`temp_mail` (`id` INT NOT NULL AUTO_INCREMENT , `email` VARCHAR(100) NULL , `company_name` VARCHAR(100) NULL , `job_title` VARCHAR(100) NULL , `address` TEXT NULL , `website` TEXT NULL , `phone` VARCHAR(20) NULL , `created_date` DATE NULL , `created_by` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `temp_mail` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+CREATE TABLE `q4magic`.`email_scraping_requests` (`id` INT NOT NULL AUTO_INCREMENT , `email` VARCHAR(100) NOT NULL , `password` VARCHAR(50) NOT NULL , `protocol` VARCHAR(50) NOT NULL , `imap_host` VARCHAR(50) NOT NULL , `imap_port` INT NOT NULL , `maxMessages` INT NOT NULL , `status` INT NOT NULL , `created_at` DATE NOT NULL , `created_by` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `email_scraping_requests` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `temp_mail` ADD `request_id` INT NOT NULL AFTER `id`;
+
+ALTER TABLE `temp_mail` ADD FOREIGN KEY (`request_id`) REFERENCES `email_scraping_requests`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `email_scraping_requests` CHANGE `maxMessages` `max_messages` INT(11) NOT NULL;
+
+============================ 17-10-25 ============================
+
+ALTER TABLE `contacts` CHANGE `title` `title` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `contacts` CHANGE `email_address` `email_address` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+============================ 18-10-25 ============================
+
+ALTER TABLE `temp_mail` ADD `firsst_name` VARCHAR(255) NULL AFTER `request_id`, ADD `last_name` VARCHAR(255) NULL AFTER `firsst_name`;
+
+ALTER TABLE `temp_mail` CHANGE `firsst_name` `first_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+============================ 19-10-25 ============================
+
+CREATE TABLE `q4magic`.`todo_attachments` (`id` INT NOT NULL AUTO_INCREMENT , `todo_id` INT NOT NULL , `path` VARCHAR(250) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `todo_attachments` ADD FOREIGN KEY (`todo_id`) REFERENCES `todo`(`todo_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `todo_attachments` ADD `image_name` VARCHAR(200) NULL AFTER `todo_id`;
+
+============================ 27-10-25 ============================
+
+ALTER TABLE `customers` ADD `google_calendar_access_token` TEXT NULL AFTER `sub_user_type`, ADD `google_calendar_refresh_token` TEXT NULL AFTER `google_calendar_access_token`, ADD `google_calendar_sync_time` VARCHAR(200) NULL AFTER `google_calendar_refresh_token`;
+
+
+ALTER TABLE `customers` ADD `google_calendar_email` VARCHAR(200) NULL AFTER `google_calendar_sync_time`;
+
+============================ 28-10-25 ============================
+
+CREATE TABLE `q4magic`.`products` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(200) NOT NULL , `code` VARCHAR(200) NULL , `price` INT NOT NULL , `description` VARCHAR(250) NULL , `is_active` BOOLEAN NOT NULL , `created_by` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `products` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+
+CREATE TABLE `q4magic`.`opportunity_products` (`id` INT NOT NULL AUTO_INCREMENT , `opp_id` INT NOT NULL , `name` VARCHAR(200) NOT NULL , `price` INT NOT NULL , `qty` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `opportunity_products` ADD FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 29-10-25 ============================
+
+ALTER TABLE `products` ADD `type` VARCHAR(200) NOT NULL AFTER `id`;
+
+ALTER TABLE `opportunity_line_items` CHANGE `opp_line_item_id` `opp_line_item_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `opportunity_products` ADD `product_id` INT NOT NULL AFTER `opp_id`;
+
+ALTER TABLE `opportunity_products` ADD FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `opportunity_line_items` ADD `product_id` INT NOT NULL AFTER `opp_id`;
+
+ALTER TABLE `opportunity_line_items` DROP FOREIGN KEY `fk_opportunity_line_items_opportunties1`;
+
+ALTER TABLE `opportunity_line_items` ADD CONSTRAINT `fk_opportunity_line_items_opportunties1` FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE NO ACTION; 
+
+ALTER TABLE `opportunity_line_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+CREATE TABLE `q4magic`.`opportunity_contact` (`id` INT NOT NULL AUTO_INCREMENT , `opp_id` INT NOT NULL , `contact_id` INT NOT NULL , `is_key` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `opportunity_contact` ADD FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `opportunity_contact` ADD FOREIGN KEY (`contact_id`) REFERENCES `contacts`(`con_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `opportunity_contact` ADD `role` VARCHAR(200) NULL AFTER `contact_id`;
+
+============================ 30-10-25 ============================
+
+ALTER TABLE `customers` ADD `start_eval_period` DATE NULL AFTER `quota`, ADD `end_eval_period` DATE NULL AFTER `start_eval_period`;
+
+ALTER TABLE `contacts` ADD `report_to` INT NULL AFTER `role`;
+
+ALTER TABLE `contacts` ADD FOREIGN KEY (`report_to`) REFERENCES `contacts`(`con_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE `products` ADD `salesforce_product_id` VARCHAR(200) NULL AFTER `id`;
