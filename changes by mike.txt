@@ -5,6 +5,8 @@ This documents(note) is created on 30/10/2025
 
 (2) Signature Scrapper
     -- In signature scrapper there is summary view which is not include in 360-pipe documents , it's mike call
+    -- Add filters in summary view by email and companyName
+    -- Mails is also delete from User's inbox	
 
 (3) Members
     -- we have created UI for assign quota to all members but remove by mike he only want email,phone,name and member role and send invitation.
@@ -12,7 +14,17 @@ This documents(note) is created on 30/10/2025
 
 (4) Todo
     -- Added sorting(priority) for todo in today's todo , it's mike call
-    -- Show progess how much task(todo) completed , it's mike call
+    -- Show progress how much task(todo) completed , it's mike call
 
 (5) Change Theme 
-    -- change theme because accroding to logo colors
+    -- change theme because according to logo colors
+
+(5) Quota
+    -- change Quota UI According to mike
+
+(6) Opportunities
+    -- create CRUD and UI
+    -- add logo in opportunities and only which is 100x100
+    -- add filters in opportunities by name , status and stages
+    -- change deal amount if products total is grater then deal-amount then change deal-amount
+

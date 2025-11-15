@@ -458,3 +458,46 @@ ALTER TABLE `contacts` ADD `report_to` INT NULL AFTER `role`;
 ALTER TABLE `contacts` ADD FOREIGN KEY (`report_to`) REFERENCES `contacts`(`con_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 ALTER TABLE `products` ADD `salesforce_product_id` VARCHAR(200) NULL AFTER `id`;
+
+============================ 03-11-25 ============================
+
+ALTER TABLE `temp_mail` ADD `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE AFTER `created_by`;
+
+ALTER TABLE `temp_mail` ADD `message_uid` INT NULL AFTER `request_id`, ADD `message_id` VARCHAR(250) NOT NULL AFTER `message_uid`, ADD `mailbox` VARCHAR(200) NOT NULL AFTER `message_id`;
+
+ALTER TABLE `temp_mail` CHANGE `mailbox` `mailbox` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+ALTER TABLE `temp_mail` CHANGE `message_id` `message_id` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+============================ 04-11-25 ============================
+
+ALTER TABLE `opportunity_contact` ADD `salesforce_opportunity_contact_id` VARCHAR(200) NULL AFTER `id`;
+
+ALTER TABLE `opportunity_contact` ADD `is_deleted` BOOLEAN NULL DEFAULT FALSE AFTER `is_key`;
+
+============================ 05-11-25 ============================
+
+ALTER TABLE `opportunity_contact` ADD `salesforce_contact_id` VARCHAR(200) NULL AFTER `contact_id`;
+
+============================ 06-11-25 ============================
+
+ALTER TABLE `opportunities` ADD `logo` VARCHAR(255) NULL AFTER `partners`;
+
+============================ 08-11-25 ============================
+
+ALTER TABLE `opportunities` CHANGE `deal_amount` `deal_amount` FLOAT NOT NULL;
+
+ALTER TABLE `products` CHANGE `price` `price` FLOAT NOT NULL;
+
+ALTER TABLE `opportunity_products` CHANGE `price` `price` FLOAT(11) NOT NULL;
+
+============================ 10-11-25 ============================
+
+ALTER TABLE `customer_quotas` CHANGE `quota` `quota` FLOAT NULL DEFAULT NULL;
+
+ALTER TABLE `customer_quotas` CHANGE `amount1` `amount1` FLOAT NULL DEFAULT NULL, CHANGE `amount2` `amount2` FLOAT NULL DEFAULT NULL, CHANGE `amount3` `amount3` FLOAT NULL DEFAULT NULL, CHANGE `amount4` `amount4` FLOAT NULL DEFAULT NULL, CHANGE `amount5` `amount5` FLOAT NULL DEFAULT NULL, CHANGE `amount6` `amount6` FLOAT NULL DEFAULT NULL, CHANGE `amount7` `amount7` FLOAT NULL DEFAULT NULL, CHANGE `amount8` `amount8` FLOAT NULL DEFAULT NULL, CHANGE `amount9` `amount9` FLOAT NULL DEFAULT NULL, CHANGE `amount10` `amount10` FLOAT NULL DEFAULT NULL, CHANGE `amount11` `amount11` FLOAT NULL DEFAULT NULL, CHANGE `amount12` `amount12` FLOAT NULL DEFAULT NULL;
+
+============================ 14-11-25 ============================
+
+ALTER TABLE `opportunities` ADD `created_at` DATE NULL AFTER `created_by`;
+
