@@ -501,3 +501,65 @@ ALTER TABLE `customer_quotas` CHANGE `amount1` `amount1` FLOAT NULL DEFAULT NULL
 
 ALTER TABLE `opportunities` ADD `created_at` DATE NULL AFTER `created_by`;
 
+============================ 21-11-25 ============================
+
+ALTER TABLE `opportunity_documents` CHANGE `opp_doc_id` `opp_doc_id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `document_type` `document_type` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `document` `document` VARCHAR(250) NULL DEFAULT NULL;
+
+ALTER TABLE `opportunity_documents` DROP FOREIGN KEY `fk_opportunity_documents_opportunties1`; ALTER TABLE `opportunity_documents` ADD CONSTRAINT `fk_opportunity_documents_opportunties1` FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `opportunities` CHANGE `deal_amount` `deal_amount` DOUBLE(50,2) NOT NULL;
+
+============================ 22-11-25 ============================
+
+ALTER TABLE `opportunities` ADD `discount_percentage` DOUBLE(10,2) NULL AFTER `deal_amount`, ADD `list_price` DOUBLE(12,2) NULL AFTER `discount_percentage`;
+
+ALTER TABLE `opportunities` CHANGE `deal_amount` `deal_amount` DOUBLE(12,2) NOT NULL;
+
+ALTER TABLE `opportunities` CHANGE `deal_amount` `deal_amount` DOUBLE(12,2) NULL;
+
+ALTER TABLE `opportunities` CHANGE `list_price` `list_price` DOUBLE(12,2) NOT NULL;
+
+============================ 26-11-25 ============================
+
+ALTER TABLE `opportunity_documents` ADD `is_internal` BOOLEAN NULL DEFAULT FALSE AFTER `url`;
+
+============================ 27-11-25 ============================
+
+ALTER TABLE `opportunities` CHANGE `created_at` `created_at` DATE NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE `opportunities` CHANGE `why_do_anything` `why_do_anything` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `business_value` `business_value` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+============================ 28-11-25 ============================
+
+ALTER TABLE `opportunities` ADD `decision_map` LONGTEXT NULL AFTER `business_value`, ADD `current_environment` LONGTEXT NULL AFTER `decision_map`;
+============================ 02-12-25 ============================
+
+ALTER TABLE `opportunity_contact` CHANGE `contact_id` `contact_id` INT(11) NULL;
+
+============================ 03-12-25 ============================
+
+ALTER TABLE `opportunity_products` ADD `created_date` DATE NULL DEFAULT CURRENT_TIMESTAMP AFTER `qty`;
+
+ALTER TABLE `opportunity_products` ADD `opportunity_product_id` VARCHAR(200) NULL AFTER `product_id`;
+
+ALTER TABLE `opportunity_products` ADD `is_deleted` BOOLEAN NULL DEFAULT FALSE AFTER `created_date`;
+
+============================ 04-12-25 ============================
+
+ALTER TABLE `sales_process` DROP FOREIGN KEY `fk_sales_process_opportunties1`; 
+ALTER TABLE `sales_process` ADD CONSTRAINT `fk_sales_process_opportunties1` FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE CASCADE ON UPDATE NO ACTION; 
+ALTER TABLE `sales_process` ADD FOREIGN KEY (`contact_id`) REFERENCES `contacts`(`con_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+
+CREATE TABLE `q4magic`.`process_name` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(250) NOT NULL , `opp_id` INT NULL , `created_by` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `process_name` ADD FOREIGN KEY (`opp_id`) REFERENCES `opportunities`(`opp_id`) ON DELETE SET NULL ON UPDATE RESTRICT; 
+ALTER TABLE `process_name` ADD FOREIGN KEY (`created_by`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+============================ 05-12-25 ============================
+
+ALTER TABLE `sales_process` CHANGE `sales_pro_id` `sales_pro_id` INT(11) NOT NULL AUTO_INCREMENT;
+
+============================ 06-12-25 ============================
+
+ALTER TABLE `sales_process` ADD `reason` VARCHAR(250) NULL AFTER `notes`;
