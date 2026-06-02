@@ -777,6 +777,7 @@ ALTER TABLE `meetings` ADD `contact_ids` VARCHAR(250) NULL AFTER `calendar_id`;
 
 ============================ 29-01-26 ============================
 
+
 ALTER TABLE `sales_process` DROP FOREIGN KEY `sales_process_ibfk_1`; 
 
 ALTER TABLE `sales_process` ADD CONSTRAINT `sales_process_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `opportunity_contact`(`id`) ON DELETE SET NULL ON UPDATE RESTRICT;
